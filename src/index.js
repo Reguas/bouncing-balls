@@ -21,10 +21,6 @@ function init() {
   isPlaying = false;
   
   resizeCanvas()
-  centerX = canvas.width / 2;
-  centerY = (canvas.height * 3) / 4;
-  ballDistance = Math.min((centerY - 50) / ballCount, 15);
-  borderLength = 50 + (ballCount * ballDistance) / Math.sqrt(2);
   
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   let gainNode = audioCtx.createGain();
@@ -153,11 +149,12 @@ function drawLines() {
 }
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth * 0.8;
+  canvas.width = window.innerWidth * 0.7;
   canvas.height = window.innerHeight;
-  drawCtx.clearRect(0, 0, canvas.width, canvas.height);
   centerX = canvas.width / 2;
-  centerY = canvas.height / 2 + 100;
+  centerY = (canvas.height * 3) / 4;
+  ballDistance = Math.min((centerY - 50) / ballCount, (centerX - 20) / ballCount, 15);
+  borderLength = 50 + (ballCount * ballDistance) / Math.sqrt(2);
   for (let ball of balls) {
     ball.cx = centerX;
     ball.cy = centerY;
