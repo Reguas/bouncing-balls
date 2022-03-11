@@ -9,7 +9,7 @@ let ballCount = 20;
 let ballRadius = 5;
 let speed = 0.0001;
 
-let genCode = '40+i'
+let genCode = '200+4*i'
 
 let centerX, centerY, borderLength;
 let ballDistance;
