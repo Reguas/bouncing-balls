@@ -12,6 +12,7 @@ export default class Ball {
 
     this.ballRadius = ballRadius;
     this.color = color;
+	this.selected = false;
 
     this.sound = sound;
 
@@ -20,7 +21,7 @@ export default class Ball {
 
   draw() {
     this.calcPosition();
-    this.ctx.fillStyle = this.color;
+    this.ctx.fillStyle = this.selected ? "#FF0000" : this.color;
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.ballRadius, 0, Math.PI * 2, true);
     this.ctx.stroke();

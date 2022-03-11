@@ -92,7 +92,7 @@ function generateButtons() {
     var row = document.createElement("tr");
 
     var cell = document.createElement("td");
-    var cellText = document.createTextNode("Шар " + i);
+    var cellText = document.createTextNode("Шар " + (i+1));
     cell.appendChild(cellText);
     row.appendChild(cell);
 
@@ -107,6 +107,14 @@ function generateButtons() {
     };
     cell.appendChild(cellInput);
     row.appendChild(cell);
+	row.onmouseover = function() {
+	  balls[i].selected = true;
+	  balls[i].draw();
+	}
+	row.onmouseleave = function() {
+	  balls[i].selected = false;
+	  balls[i].draw();
+	}
     tblBody.appendChild(row);
   }
 
