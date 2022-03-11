@@ -10,7 +10,7 @@ body {
 }
 .balls-container {
   position: absolute;
-  width: 300px;
+  width: 20%;
   right: 0px;
   padding: 8px;
 }

@@ -101,8 +101,9 @@ function generateButtons() {
     cellInput.type = "number";
     cellInput.min = "0";
     cellInput.value = balls[i].velocity;
+    cellInput.style.width = "50px";
     cellInput.oninput = function () {
-      let nv = event.srcElement.value
+      let nv = this.value
       balls[i].velocity = nv;
     };
     cell.appendChild(cellInput);
