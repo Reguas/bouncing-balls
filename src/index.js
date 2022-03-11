@@ -88,7 +88,7 @@ function generateButtons() {
   const tbl = document.getElementById("balls-speeds");
   var tblBody = document.createElement("tbody");
 
-  for (let i in balls) {
+  for (let i = 0; i < ballCount; ++i) {
     var row = document.createElement("tr");
 
     var cell = document.createElement("td");
