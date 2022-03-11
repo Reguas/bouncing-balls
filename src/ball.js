@@ -12,7 +12,7 @@ export default class Ball {
 
     this.ballRadius = ballRadius;
     this.color = color;
-	this.selected = false;
+	  this.selected = false;
 
     this.sound = sound;
 

@@ -9,6 +9,8 @@ let ballCount = 20;
 let ballRadius = 5;
 let speed = 0.0001;
 
+let genCode = '40+i'
+
 let centerX, centerY, borderLength;
 let ballDistance;
 
@@ -17,14 +19,13 @@ function init() {
   drawCtx = canvas.getContext("2d");
   balls = [];
   isPlaying = false;
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  
+  resizeCanvas()
   centerX = canvas.width / 2;
   centerY = (canvas.height * 3) / 4;
   ballDistance = Math.min((centerY - 50) / ballCount, 15);
   borderLength = 50 + (ballCount * ballDistance) / Math.sqrt(2);
-
+  
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   let gainNode = audioCtx.createGain();
   if (ballCount > 0) {
@@ -40,7 +41,7 @@ function init() {
         centerY,
         50 + i * ballDistance,
         ballRadius,
-        40 + i,
+        window.eval('let i=' + i + ';' + genCode),
         hslToHex((360 * i) / ballCount, 80, 50),
         new Sound(audioCtx, gainNode, 440 * mul ** i)
       )
@@ -55,14 +56,12 @@ function init() {
 }
 
 function step() {
-  drawCtx.clearRect(0, 0, canvas.width, canvas.height);
+  draw()
   for (let ball of balls) {
-    ball.draw();
     if (isPlaying) {
       ball.step(speed);
     }
   }
-  drawLines();
 
   if (isPlaying) {
     requestAnimationFrame(step);
@@ -92,7 +91,7 @@ function generateButtons() {
     var row = document.createElement("tr");
 
     var cell = document.createElement("td");
-    var cellText = document.createTextNode("Шар " + (i+1));
+    var cellText = document.createTextNode("Шар " + i);
     cell.appendChild(cellText);
     row.appendChild(cell);
 
@@ -102,6 +101,7 @@ function generateButtons() {
     cellInput.min = "0";
     cellInput.value = balls[i].velocity;
     cellInput.style.width = "50px";
+    cellInput.id = "ball-speed-" + i;
     cellInput.oninput = function () {
       let nv = this.value
       balls[i].velocity = nv;
@@ -125,6 +125,14 @@ function generateButtons() {
   tbl.appendChild(tblBody);
 }
 
+function draw() {
+  drawCtx.clearRect(0, 0, canvas.width, canvas.height);
+  drawLines();
+  for (let ball of balls) {
+    ball.draw();
+  }
+}
+
 function drawLines() {
   drawCtx.beginPath();
   drawCtx.moveTo(centerX, centerY);
@@ -132,19 +140,20 @@ function drawLines() {
   drawCtx.moveTo(centerX, centerY);
   drawCtx.lineTo(centerX + borderLength, centerY - borderLength);
   drawCtx.stroke();
-  if (!ballCount) {
+  if (!balls.length) {
     return;
   }
   drawCtx.beginPath();
   drawCtx.moveTo(balls[0].x, balls[0].y);
   for (let ball of balls.slice(1)) {
+    ball.calcPosition();
     drawCtx.lineTo(ball.x, ball.y);
   }
   drawCtx.stroke();
 }
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
+  canvas.width = window.innerWidth * 0.8;
   canvas.height = window.innerHeight;
   drawCtx.clearRect(0, 0, canvas.width, canvas.height);
   centerX = canvas.width / 2;
@@ -153,9 +162,7 @@ function resizeCanvas() {
     ball.cx = centerX;
     ball.cy = centerY;
   }
-  if (!isPlaying) {
-    step();
-  }
+  draw();
 }
 
 let startButton = document.getElementById("start-stop-button");
@@ -170,12 +177,16 @@ startButton.onclick = function () {
   audioCtx.resume();
 };
 
-let resetButton = document.getElementById("reset-button");
-resetButton.onclick = function () {
+function reset() {
   startButton.innerText = "Старт";
   speedBar.value = 0;
   speedBar.oninput();
   init();
+}
+
+let resetButton = document.getElementById("reset-button");
+resetButton.onclick = function () {
+  reset()
 };
 
 let speedBar = document.getElementById("speed");
@@ -188,7 +199,7 @@ speedBar.oninput = function () {
 let countInput = document.getElementById("balls-count");
 countInput.oninput = function () {
   ballCount = parseInt(countInput.value, 10);
-  init();
+  reset();
 };
 
 let collapsed = false;
@@ -204,3 +215,20 @@ collapseBallsButton.onclick = function () {
   }
   audioCtx.resume();
 };
+
+let runButton = document.getElementById("run-code");
+runButton.onclick = function() {
+  let codeArea = document.getElementById("gen-code");
+  console.log(codeArea.value)
+  try {
+    window.eval('let i=0;' + codeArea.value);
+  } catch (e) {
+    alert(e.message);
+    return;
+  }
+  genCode = codeArea.value;
+  for (let i in balls) {
+    balls[i].velocity = window.eval('let i=' + i + ';' + genCode);
+    document.getElementById("ball-speed-" + i).value = balls[i].velocity;
+  }
+}
