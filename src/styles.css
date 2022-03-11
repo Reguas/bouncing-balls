@@ -1,0 +1,28 @@
+body {
+  font-family: sans-serif;
+  margin: 0px;
+}
+
+.canvas-container {
+  position: absolute;
+  padding: 8px;
+  width: 100%;
+}
+.balls-container {
+  position: absolute;
+  width: 300px;
+  right: 0px;
+  padding: 8px;
+}
+#canvas {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
+  left: 0px;
+}
+#table-scroll {
+  height: 400px;
+  overflow: auto;
+  margin-top: 20px;
+}
