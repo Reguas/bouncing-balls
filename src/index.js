@@ -189,3 +189,17 @@ countInput.oninput = function () {
   ballCount = parseInt(countInput.value, 10);
   init();
 };
+
+let collapsed = false;
+let collapseBallsButton = document.getElementById("collapse-balls");
+collapseBallsButton.onclick = function () {
+  collapsed = !collapsed;
+  if (collapsed) {
+    collapseBallsButton.innerText = "Развернуть";
+    document.getElementById("table-balls").style.visibility="hidden";
+  } else {
+    collapseBallsButton.innerText = "Свернуть";
+    document.getElementById("table-balls").style.visibility="visible";
+  }
+  audioCtx.resume();
+};
