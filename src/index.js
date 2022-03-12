@@ -150,7 +150,7 @@ function drawLines() {
 }
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth * 0.7;
+  canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   centerX = canvas.width / 2;
   centerY = (canvas.height * 3) / 4;
