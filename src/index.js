@@ -283,8 +283,9 @@ function resetSoft() {
   speedBar.oninput();
   isPlaying = false;
 
-  for (let ball of balls) {
-    ball.angle = 0;
+  for (let i in balls) {
+    balls[i].angle = 0;
+    balls[i].radius = 50 + i * ballDistance;
   }
   
   resizeCanvas();

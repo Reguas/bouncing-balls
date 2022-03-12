@@ -7,15 +7,17 @@ button, span {
   margin: 2px;
 }
 
+
 .canvas-container {
   position: absolute;
+  right: 0px;
   padding: 8px;
-  width: 100%;
 }
-.balls-container {
+
+.balls-container  {
   position: absolute;
   width: 20%;
-  right: 0px;
+  min-width: 250px;
   padding: 8px;
 }
 #canvas {
@@ -29,4 +31,8 @@ button, span {
   height: 400px;
   overflow: auto;
   margin-top: 20px;
+}
+
+#expand-sound {
+  width: 200px; 
 }
