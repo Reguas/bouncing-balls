@@ -14,6 +14,21 @@ button, span {
   padding: 8px;
 }
 
+.start-stop-wrapper {
+  position: absolute;
+  width: 130px;
+  right: 0px;
+  padding: 8px;
+}
+
+.speed-bar {
+  position: absolute;
+  right: 0px;
+  top: 35px;
+  padding: 8px;
+  width:260px;
+}
+
 .balls-container  {
   position: absolute;
   width: 20%;
