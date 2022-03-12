@@ -208,7 +208,7 @@ function setSoundSelect(cellSelect, frequency) {
 }
 
 function noteName(i) {
-  let notes = ["A", "A#", "B", "C", "C#", "D#", "E", "E#", "F", "F#", "G", "G#"];
+  let notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
   return notes[(i % 12 + 12) % 12] + (~~((i-2) / 12) + 4);
 }
 
