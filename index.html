@@ -25,19 +25,20 @@
         Количество шаров:
         <input id="balls-count" type="number" min="0" max="100" value="20" style="width:50px" />
       </p>
-      <div>
-        <p>Тут можно написать код на JS для генерации скоростей шаров. Нумерация начинается с 0.</p>
-        <code>i -> </code>
-        <textarea style="vertical-align:middle; width:80%" id="gen-code" rows="3">200+4*i</textarea>
-        <br>
-        <button id="run-code">Сгенерировать</button>
-        <button id="collapse-balls">Свернуть</button>
-        <br>
-        <code id="reason"></code>
-      </div>
-      <div id="table-balls">
-        <div id="table-scroll">
-          <table id="balls-speeds"></table>
+      <button id="collapse-balls">Развернуть</button>
+      <div id="expand">
+        <div>
+          <p>Тут можно написать код на JS для генерации скоростей шаров. Нумерация начинается с 0.</p>
+          <code>i -> </code>
+          <textarea style="vertical-align:middle; width:80%" id="gen-code" rows="3">200+4*i</textarea>
+          <br>
+          <button id="run-code">Сгенерировать</button>
+          <br>
+        </div>
+        <div id="table-balls">
+          <div id="table-scroll">
+            <table id="balls-speeds"></table>
+          </div>
         </div>
       </div>
     </div>

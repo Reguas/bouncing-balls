@@ -140,6 +140,7 @@ function drawLines() {
     return;
   }
   drawCtx.beginPath();
+  balls[0].calcPosition()
   drawCtx.moveTo(balls[0].x, balls[0].y);
   for (let ball of balls.slice(1)) {
     ball.calcPosition();
@@ -178,7 +179,14 @@ function reset() {
   startButton.innerText = "Старт";
   speedBar.value = 0;
   speedBar.oninput();
-  init();
+  isPlaying = false;
+  
+  resizeCanvas()
+  for (let i in balls) {
+    balls[i].angle = 0;
+    balls[i].radius = 50 + i * ballDistance;
+  }
+  draw();
 }
 
 let resetButton = document.getElementById("reset-button");
@@ -197,18 +205,19 @@ let countInput = document.getElementById("balls-count");
 countInput.oninput = function () {
   ballCount = parseInt(countInput.value, 10);
   reset();
+  init();
 };
 
-let collapsed = false;
+let collapsed = true;
 let collapseBallsButton = document.getElementById("collapse-balls");
 collapseBallsButton.onclick = function () {
   collapsed = !collapsed;
   if (collapsed) {
     collapseBallsButton.innerText = "Развернуть";
-    document.getElementById("table-balls").style.visibility="hidden";
+    document.getElementById("expand").style.display="none";
   } else {
     collapseBallsButton.innerText = "Свернуть";
-    document.getElementById("table-balls").style.visibility="visible";
+    document.getElementById("expand").style.display="block";
   }
   audioCtx.resume();
 };
