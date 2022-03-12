@@ -250,17 +250,6 @@ collapseSpeedButton.onclick = function () {
   }
 };
 
-let genSoundCollapsed = true;
-let collapseSoundButton = document.getElementById("show-gen-sound");
-collapseSoundButton.onclick = function () {
-  genSoundCollapsed = !genSoundCollapsed;
-  if (genSoundCollapsed) {
-    document.getElementById("expand-sound").style.display="none";
-  } else {
-    document.getElementById("expand-sound").style.display="block";
-  }
-};
-
 let runButton = document.getElementById("run-code");
 runButton.onclick = function() {
   let codeArea = document.getElementById("gen-code");
