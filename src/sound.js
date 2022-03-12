@@ -1,12 +1,16 @@
 export default class Sound {
   constructor(audioCtx, gainNode, frequency) {
     this.audioCtx = audioCtx;
-    this.frequency = frequency;
+    this.frequency = Math.max(frequency, 0);
     this.gainNode = gainNode;
     this.gainNode.connect(this.audioCtx.destination);
   }
 
   play() {
+    if (this.frequency > 24000) {
+      return;
+    }
+
     var oscillator = this.audioCtx.createOscillator();
 
     oscillator.type = "square";

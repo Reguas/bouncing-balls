@@ -153,8 +153,8 @@ function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   centerX = canvas.width / 2;
-  centerY = (canvas.height * 3) / 4;
-  ballDistance = Math.min((centerY - 50) / ballCount, (centerX - 20) / ballCount, 15);
+  centerY = (canvas.height * 5) / 6;
+  ballDistance = Math.min((centerY - 100) / ballCount, (centerX - 40) / ballCount, 15);
   borderLength = 50 + (ballCount * ballDistance) / Math.sqrt(2);
   for (let ball of balls) {
     ball.cx = centerX;
