@@ -22,28 +22,42 @@
     </div>
     <div class="balls-container">
       <p>
-        Количество шаров:
-        <input id="balls-count" type="number" min="0" max="100" value="20" style="width:50px" />
+        <span>Количество шаров:</span>
+        <input id="balls-count" type="number" min="0" max="100" value="20" style="width:50px; margin: 2px;" />
       </p>
       <button id="collapse-balls">Развернуть</button>
       <br>
       <button id="show-gen-speed">Генерация скоростей</button>
-      
+      <br>
+      <button id="show-gen-sound">Генерация звуков</button>
+      <br>
       <br>
       <div id="expand-speed" style="display: none">
-        <p>Тут можно написать код на JS для генерации скоростей шаров. Нумерация начинается с 0.</p>
+        <span>Тут можно написать формулу для генерации скоростей шаров. Нумерация начинается с 0.</span>
+        <br>
         <code>i -> </code>
         <textarea style="vertical-align:middle; width:80%" id="gen-code" rows="3">200+4*i</textarea>
         <br>
         <button id="run-code">Сгенерировать</button>
         <br>
+        <br>
       </div>
       <div id="expand-sound" style="display: none">
-        <input type="radio" name="sound-type" value="1">Фиксированный шаг</input>
+        <span>Заполнить диапазон</span>
         <br>
-        <input type="radio" name="sound-type" value="2" checked>Заполнить диапазон</input>
-        <br>
-        <input type="radio" name="sound-type" value="3">В зависимости от скорости</input>
+        <div id="fill-range-sound">
+          <span>От: </span>
+          <select id="sound-from-select"></select>
+          <input type="number" id="sound-from-input" step="0.01" style="width: 70px">
+          <br>
+          <span>До: </span>
+          <select id="sound-to-select"></select>
+          <input type="number" id="sound-to-input" step="0.01" style="width: 70px">
+          <br>
+          <button id="run-sound">Сгенерировать</button>
+          <br>
+          <br>
+        </div>
       </div>
       <div id="table-balls" style="display: none">
         <div id="table-scroll">

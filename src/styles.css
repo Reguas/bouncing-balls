@@ -3,6 +3,10 @@ body {
   margin: 0px;
 }
 
+button, span {
+  margin: 2px;
+}
+
 .canvas-container {
   position: absolute;
   padding: 8px;

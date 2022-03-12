@@ -14,6 +14,10 @@ let genCode = '200+4*i'
 let centerX, centerY, borderLength;
 let ballDistance;
 
+let fromSound = 220, toSound = 440;
+
+let soundType = 1;
+
 function init() {
   canvas = document.getElementById("canvas");
   drawCtx = canvas.getContext("2d");
@@ -34,6 +38,8 @@ function init() {
   
   generateButtons();
 
+  generateSoundVariations();
+
   step();
 }
 
@@ -48,7 +54,7 @@ function generateBalls() {
         ballRadius,
         window.eval('let i=' + i + ';' + genCode),
         hslToHex((360 * i) / ballCount, 80, 50),
-        genSound(i)
+        new Sound(audioCtx, gainNode, genSound(i))
       )
     );
   }
@@ -70,11 +76,13 @@ function step() {
 init();
 
 function genSound(i) {
-  if (ballCount > 0) {
-    const mul = 8 ** (1 / ballCount);
-    return new Sound(audioCtx, gainNode, 220 * mul ** i);
+  if (soundType == 1) {
+    if (ballCount > 1 && fromSound > 0) {
+      const mul = (toSound / fromSound) ** (1 / (ballCount-1));
+      return fromSound * mul ** i;
+    }
   }
-  return new Sound(audioCtx, gainNode, 440);
+  return fromSound;
 }
 
 function hslToHex(h, s, l) {
@@ -90,15 +98,25 @@ function hslToHex(h, s, l) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+function generateHeader(tbl, name) {
+  let header = document.createElement("th");
+  header.textContent = name;
+  tbl.appendChild(header);
+}
+
 function generateButtons() {
   const tbl = document.getElementById("balls-speeds");
   var tblBody = document.createElement("tbody");
+  generateHeader(tblBody, "№");
+  generateHeader(tblBody, "Скорость");
+  generateHeader(tblBody, "Нота");
+  generateHeader(tblBody, "Частота, Гц");
 
   for (let i = 0; i < ballCount; ++i) {
     var row = document.createElement("tr");
 
     var cell = document.createElement("td");
-    var cellText = document.createTextNode("Шар " + i);
+    var cellText = document.createTextNode(i);
     cell.appendChild(cellText);
     row.appendChild(cell);
 
@@ -111,18 +129,46 @@ function generateButtons() {
     cellInput.id = "ball-speed-" + i;
     cellInput.oninput = function () {
       let nv = this.value
-      balls[i].velocity = nv;
+      updateBallSpeed(i, nv);
     };
     cell.appendChild(cellInput);
     row.appendChild(cell);
-	row.onmouseover = function() {
-	  balls[i].selected = true;
-	  balls[i].draw();
-	}
-	row.onmouseleave = function() {
-	  balls[i].selected = false;
-	  balls[i].draw();
-	}
+
+    cell = document.createElement("td");
+    var cellSelect = document.createElement("select");
+    generateSoundSelect(cellSelect, balls[i].sound.frequency);
+    cellSelect.id = "ball-sound-select-" + i;
+    cellSelect.onchange = function() {
+      let nv = this.value;
+      updateBallSound(i, nv);
+    }
+    cell.appendChild(cellSelect);
+    row.appendChild(cell);
+
+    cell = document.createElement("td");
+    cellInput = document.createElement("input");
+    cellInput.type = "number";
+    cellInput.min = "0";
+    cellInput.value = balls[i].sound.frequency.toFixed(2);
+    cellInput.style.width = "70px";
+    cellInput.id = "ball-sound-" + i;
+    cellInput.step = "0.01";
+    cellInput.oninput = function () {
+      let nv = this.value
+      updateBallSound(i, nv);
+    };
+    cell.appendChild(cellInput);
+    row.appendChild(cell);
+
+    row.onmouseenter = function() {
+      balls[i].selected = true;
+      balls[i].sound.play();
+      balls[i].draw();
+    }
+    row.onmouseleave = function() {
+      balls[i].selected = false;
+      balls[i].draw();
+    }
     tblBody.appendChild(row);
   }
 
@@ -130,6 +176,40 @@ function generateButtons() {
     tbl.firstChild.remove();
   }
   tbl.appendChild(tblBody);
+}
+
+function generateSoundSelect(cellSelect, frequency) {
+  let option = document.createElement("option");
+  option.selected = true;
+  option.style = "display: none";
+  cellSelect.appendChild(option);
+  const initial = 440;
+  const step = 2 ** (1/12);
+
+  for (let i = -48; i < 43; ++i) {
+    let freq = initial * step ** i;
+    option = document.createElement("option");
+    option.value = freq;
+    option.textContent = noteName(i);
+    option.selected = (Math.abs(frequency - freq) < 0.01);
+    cellSelect.appendChild(option);
+  }
+}
+
+function setSoundSelect(cellSelect, frequency) {
+  const initial = 440;
+  const step = 2 ** (1/12);
+  var array = Array.prototype.slice.call(cellSelect.childNodes, 1);
+
+  for (let i = -48; i < 43; ++i) {
+    let freq = initial * step ** i;
+    array[i+48].selected = (Math.abs(frequency - freq) < 0.01);
+  }
+}
+
+function noteName(i) {
+  let notes = ["A", "A#", "B", "C", "C#", "D#", "E", "E#", "F", "F#", "G", "G#"];
+  return notes[(i % 12 + 12) % 12] + (~~((i-2) / 12) + 4);
 }
 
 function draw() {
@@ -158,6 +238,17 @@ function drawLines() {
     drawCtx.lineTo(ball.x, ball.y);
   }
   drawCtx.stroke();
+}
+
+function updateBallSpeed(i, newSpeed) {
+  balls[i].velocity = newSpeed;
+  document.getElementById("ball-speed-" + i).value = newSpeed;
+}
+
+function updateBallSound(i, newFrequency) {
+  balls[i].sound.frequency = newFrequency;
+  document.getElementById("ball-sound-" + i).value = parseFloat(newFrequency).toFixed(2);
+  setSoundSelect(document.getElementById("ball-sound-select-" + i), newFrequency);
 }
 
 function resizeCanvas() {
@@ -250,6 +341,17 @@ collapseSpeedButton.onclick = function () {
   }
 };
 
+let genSoundCollapsed = true;
+let collapseSoundButton = document.getElementById("show-gen-sound");
+collapseSoundButton.onclick = function () {
+  genSoundCollapsed = !genSoundCollapsed;
+  if (genSoundCollapsed) {
+    document.getElementById("expand-sound").style.display="none";
+  } else {
+    document.getElementById("expand-sound").style.display="block";
+  }
+};
+
 let runButton = document.getElementById("run-code");
 runButton.onclick = function() {
   let codeArea = document.getElementById("gen-code");
@@ -262,7 +364,42 @@ runButton.onclick = function() {
   }
   genCode = codeArea.value;
   for (let i in balls) {
-    balls[i].velocity = window.eval('let i=' + i + ';' + genCode);
-    document.getElementById("ball-speed-" + i).value = balls[i].velocity;
+    updateBallSpeed(i, window.eval('let i=' + i + ';' + genCode));
+  }
+}
+
+let runSoundButton = document.getElementById("run-sound");
+runSoundButton.onclick = function() {
+  fromSound = parseFloat(document.getElementById("sound-from-input").value);
+  toSound = parseFloat(document.getElementById("sound-to-input").value);
+  for (let i in balls) {
+    updateBallSound(i, genSound(i));
+  }
+}
+
+function updateFromSound(newValue) {
+  generateSoundSelect(document.getElementById("sound-from-select"), newValue);
+  document.getElementById("sound-from-input").value = parseFloat(newValue).toFixed(2);
+}
+
+function updateToSound(newValue) {
+  generateSoundSelect(document.getElementById("sound-to-select"), newValue);
+  document.getElementById("sound-to-input").value = parseFloat(newValue).toFixed(2);
+}
+
+function generateSoundVariations() {
+  updateFromSound(fromSound);
+  updateToSound(toSound);
+  document.getElementById("sound-to-select").onchange = function() {
+    updateToSound(this.value);
+  }
+  document.getElementById("sound-to-input").oninput = function() {
+    updateToSound(this.value);
+  }
+  document.getElementById("sound-from-select").onchange = function() {
+    updateFromSound(this.value);
+  }
+  document.getElementById("sound-from-input").oninput = function() {
+    updateFromSound(this.value);
   }
 }
