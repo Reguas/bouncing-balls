@@ -14,7 +14,7 @@ export default class Sound {
     var oscillator = this.audioCtx.createOscillator();
 
     oscillator.type = "square";
-    oscillator.frequency.value = this.frequency; // value in hertz
+    oscillator.frequency.value = this.frequency;
     oscillator.connect(this.gainNode);
     oscillator.start(this.audioCtx.currentTime);
     oscillator.stop(this.audioCtx.currentTime + 0.1);

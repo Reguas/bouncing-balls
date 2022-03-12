@@ -26,19 +26,28 @@
         <input id="balls-count" type="number" min="0" max="100" value="20" style="width:50px" />
       </p>
       <button id="collapse-balls">Развернуть</button>
-      <div id="expand" style="display: none">
-        <div>
-          <p>Тут можно написать код на JS для генерации скоростей шаров. Нумерация начинается с 0.</p>
-          <code>i -> </code>
-          <textarea style="vertical-align:middle; width:80%" id="gen-code" rows="3">200+4*i</textarea>
-          <br>
-          <button id="run-code">Сгенерировать</button>
-          <br>
-        </div>
-        <div id="table-balls">
-          <div id="table-scroll">
-            <table id="balls-speeds"></table>
-          </div>
+      <br>
+      <button id="show-gen-speed">Генерация скоростей</button>
+      
+      <br>
+      <div id="expand-speed" style="display: none">
+        <p>Тут можно написать код на JS для генерации скоростей шаров. Нумерация начинается с 0.</p>
+        <code>i -> </code>
+        <textarea style="vertical-align:middle; width:80%" id="gen-code" rows="3">200+4*i</textarea>
+        <br>
+        <button id="run-code">Сгенерировать</button>
+        <br>
+      </div>
+      <div id="expand-sound" style="display: block">
+        <input type="radio" name="sound-type" value="1">Фиксированный шаг</input>
+        <br>
+        <input type="radio" name="sound-type" value="2" checked>Заполнить диапазон</input>
+        <br>
+        <input type="radio" name="sound-type" value="3">В зависимости от скорости</input>
+      </div>
+      <div id="table-balls" style="display: none">
+        <div id="table-scroll">
+          <table id="balls-speeds"></table>
         </div>
       </div>
     </div>

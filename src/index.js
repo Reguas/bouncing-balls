@@ -1,7 +1,7 @@
 import Ball from "./ball.js";
 import Sound from "./sound.js";
 
-let canvas, drawCtx, audioCtx, balls;
+let canvas, drawCtx, audioCtx, gainNode, balls;
 
 var isPlaying;
 
@@ -20,15 +20,24 @@ function init() {
   balls = [];
   isPlaying = false;
   
-  resizeCanvas()
+  resizeCanvas();
   
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  let gainNode = audioCtx.createGain();
+  audioCtx = new window.AudioContext();
+  gainNode = audioCtx.createGain();
   if (ballCount > 0) {
     gainNode.gain.value = 1 / ballCount / 2;
   }
-  const mul = 2 ** (1 / 12);
 
+  generateBalls();
+  
+  window.onresize = resizeCanvas;
+  
+  generateButtons();
+
+  step();
+}
+
+function generateBalls() {
   for (let i = 0; i < ballCount; i++) {
     balls.push(
       new Ball(
@@ -39,16 +48,10 @@ function init() {
         ballRadius,
         window.eval('let i=' + i + ';' + genCode),
         hslToHex((360 * i) / ballCount, 80, 50),
-        new Sound(audioCtx, gainNode, 440 * mul ** i)
+        genSound(i)
       )
     );
   }
-
-  window.onresize = resizeCanvas;
-
-  generateButtons();
-
-  step();
 }
 
 function step() {
@@ -65,6 +68,14 @@ function step() {
 }
 
 init();
+
+function genSound(i) {
+  if (ballCount > 0) {
+    const mul = 8 ** (1 / ballCount);
+    return new Sound(audioCtx, gainNode, 220 * mul ** i);
+  }
+  return new Sound(audioCtx, gainNode, 440);
+}
 
 function hslToHex(h, s, l) {
   l /= 100;
@@ -154,7 +165,7 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
   centerX = canvas.width / 2;
   centerY = (canvas.height * 5) / 6;
-  ballDistance = Math.min((centerY - 100) / ballCount, (centerX - 40) / ballCount, 15);
+  ballDistance = Math.min((centerY - 100) / ballCount, (centerX - 40) / ballCount, 40);
   borderLength = 50 + (ballCount * ballDistance) / Math.sqrt(2);
   for (let ball of balls) {
     ball.cx = centerX;
@@ -175,23 +186,31 @@ startButton.onclick = function () {
   audioCtx.resume();
 };
 
-function reset() {
+function resetSoft() {
   startButton.innerText = "Старт";
   speedBar.value = 0;
   speedBar.oninput();
   isPlaying = false;
-  
-  resizeCanvas()
-  for (let i in balls) {
-    balls[i].angle = 0;
-    balls[i].radius = 50 + i * ballDistance;
+
+  for (let ball of balls) {
+    ball.angle = 0;
   }
+  
+  resizeCanvas();
+  draw();
+}
+
+function resetHard() {
+  balls = [];
+  resetSoft();
+  generateBalls();
+  generateButtons();
   draw();
 }
 
 let resetButton = document.getElementById("reset-button");
 resetButton.onclick = function () {
-  reset()
+  resetSoft();
 };
 
 let speedBar = document.getElementById("speed");
@@ -204,8 +223,7 @@ speedBar.oninput = function () {
 let countInput = document.getElementById("balls-count");
 countInput.oninput = function () {
   ballCount = parseInt(countInput.value, 10);
-  reset();
-  init();
+  resetHard();
 };
 
 let collapsed = true;
@@ -214,12 +232,33 @@ collapseBallsButton.onclick = function () {
   collapsed = !collapsed;
   if (collapsed) {
     collapseBallsButton.innerText = "Развернуть";
-    document.getElementById("expand").style.display="none";
+    document.getElementById("table-balls").style.display="none";
   } else {
     collapseBallsButton.innerText = "Свернуть";
-    document.getElementById("expand").style.display="block";
+    document.getElementById("table-balls").style.display="block";
   }
-  audioCtx.resume();
+};
+
+let genSpeedCollapsed = true;
+let collapseSpeedButton = document.getElementById("show-gen-speed");
+collapseSpeedButton.onclick = function () {
+  genSpeedCollapsed = !genSpeedCollapsed;
+  if (genSpeedCollapsed) {
+    document.getElementById("expand-speed").style.display="none";
+  } else {
+    document.getElementById("expand-speed").style.display="block";
+  }
+};
+
+let genSoundCollapsed = true;
+let collapseSoundButton = document.getElementById("show-gen-sound");
+collapseSoundButton.onclick = function () {
+  genSoundCollapsed = !genSoundCollapsed;
+  if (genSoundCollapsed) {
+    document.getElementById("expand-sound").style.display="none";
+  } else {
+    document.getElementById("expand-sound").style.display="block";
+  }
 };
 
 let runButton = document.getElementById("run-code");
