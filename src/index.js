@@ -391,6 +391,8 @@ function updateToSound(newValue) {
 function generateSoundVariations() {
   generateSoundSelect(document.getElementById("sound-from-select"), fromSound);
   generateSoundSelect(document.getElementById("sound-to-select"), toSound);
+  updateFromSound(fromSound);
+  updateToSound(toSound);
   document.getElementById("sound-to-select").onchange = function() {
     updateToSound(this.value);
   }
