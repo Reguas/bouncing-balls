@@ -186,7 +186,7 @@ function generateSoundSelect(cellSelect, frequency) {
   const initial = 440;
   const step = 2 ** (1/12);
 
-  for (let i = -48; i < 43; ++i) {
+  for (let i = -48; i <= 43; ++i) {
     let freq = initial * step ** i;
     option = document.createElement("option");
     option.value = freq;
@@ -201,7 +201,7 @@ function setSoundSelect(cellSelect, frequency) {
   const step = 2 ** (1/12);
   var array = Array.prototype.slice.call(cellSelect.childNodes, 1);
 
-  for (let i = -48; i < 43; ++i) {
+  for (let i = -48; i <= 43; ++i) {
     let freq = initial * step ** i;
     array[i+48].selected = (Math.abs(frequency - freq) < 0.01);
   }
@@ -209,7 +209,7 @@ function setSoundSelect(cellSelect, frequency) {
 
 function noteName(i) {
   let notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
-  return notes[(i % 12 + 12) % 12] + (~~((i-2) / 12) + 4);
+  return notes[(i % 12 + 12) % 12] + (~~((i+57) / 12));
 }
 
 function draw() {
