@@ -379,18 +379,18 @@ runSoundButton.onclick = function() {
 }
 
 function updateFromSound(newValue) {
-  generateSoundSelect(document.getElementById("sound-from-select"), newValue);
+  setSoundSelect(document.getElementById("sound-from-select"), newValue);
   document.getElementById("sound-from-input").value = parseFloat(newValue).toFixed(2);
 }
 
 function updateToSound(newValue) {
-  generateSoundSelect(document.getElementById("sound-to-select"), newValue);
+  setSoundSelect(document.getElementById("sound-to-select"), newValue);
   document.getElementById("sound-to-input").value = parseFloat(newValue).toFixed(2);
 }
 
 function generateSoundVariations() {
-  updateFromSound(fromSound);
-  updateToSound(toSound);
+  generateSoundSelect(document.getElementById("sound-from-select"), fromSound);
+  generateSoundSelect(document.getElementById("sound-to-select"), toSound);
   document.getElementById("sound-to-select").onchange = function() {
     updateToSound(this.value);
   }
