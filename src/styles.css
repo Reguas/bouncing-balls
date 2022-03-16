@@ -8,36 +8,50 @@ button, span {
 }
 
 p {
-  margin-top: 8px;
+  margin: 0px;
 }
+
 
 .canvas-container {
   position: absolute;
-  right: 0px;
-  padding: 8px;
+  padding: 16px;
+  width: 30%;
+  max-width: 300px;
 }
 
 .start-stop-wrapper {
-  position: absolute;
   width: 130px;
   right: 0px;
-  padding: 8px;
 }
 
 .speed-bar {
-  position: absolute;
-  right: 0px;
-  top: 35px;
-  padding: 8px;
-  width:260px;
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#speed {
+  vertical-align:middle;
+  width: 100px;
 }
 
 .balls-container  {
   position: absolute;
+  right: 0px;
   width: 20%;
-  min-width: 220px;
+  min-width: 170px;
+  max-width: fit-content;
   padding: 8px;
 }
+
+.info-balls-container {
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
 #canvas {
   position: absolute;
   bottom: 0px;

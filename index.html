@@ -13,16 +13,13 @@
     <canvas id="canvas" width="500px" height="500px"></canvas>
     <div class="balls-container">
       <div class="info-balls-container">
-        <p>
+        <div>
           <span>Количество шаров:</span>
-          <input id="balls-count" type="number" min="0" max="100" value="20" style="width:50px; margin: 2px;" />
-        </p>
+          <input id="balls-count" type="number" min="0" max="100" value="20" style="width:40px; margin: 2px; vertical-align: middle;" />
+        </div>
         <button id="collapse-balls">Развернуть</button>
-        <br>
         <button id="show-gen-speed">Генерация скоростей</button>
-        <br>
         <button id="show-gen-sound">Генерация звуков</button>
-        <br>
       </div>
       <div id="expand-speed" style="display: none">
         <span>Тут можно написать формулу для генерации скоростей шаров. Нумерация начинается с 0.</span>
@@ -62,11 +59,13 @@
         <button id="start-stop-button">Старт</button>
         <button id="reset-button">Сброс</button>
       </div>
-      <p class="speed-bar">
+      <div class="speed-bar">
         Скорость:
-        <input id="speed" type="range" min="-1" max="1" step="0.01" value="0" />
+        <input id="speed" type="range" min="-1" max="1" step="0.01" value="0" style="flex-grow: 1" />
         <span id="speed-value">1.00</span>
-      </p>
+        <div class="speed-bar-val">
+        </div>
+      </div>
     </div>
     <script type="module" src="src/index.js"></script>
     <script type="module" src="src/ball.js"></script>
